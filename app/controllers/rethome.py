@@ -10,6 +10,7 @@ import settings
 ##ロボターでappでテンプレートの場所を追加
 ##
 #さらにバックエンドのappにスタティックファイルの場所を設定
+
 app = Flask(__name__, template_folder='../../templates', static_folder='../../static')
 
 #作成したappを元にwebserverclassを作成。
