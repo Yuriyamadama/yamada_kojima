@@ -1,0 +1,16 @@
+<!DOCTYPE html><!--DOCTYPE宣言,HTMLのバージョンを宣言するためのもの。ここではHTML5-->
+<html lang="en"><!--言語の指定-->
+<head>
+    <meta charset="UTF-8"><!--HTML5での文字コードはUTF-8が推奨(文字化け対策)-->
+    <title>Roboter 2</title><!--タブに表示される内容-->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css')}} ">
+    <!--個別でのスタイル設定-->
+    <style>　
+        {% block style %}{% endblock %}
+
+    </style>
+</head>
+<body><!--ページに実際に表示される内容-->
+{% block content %} {% endblock %}
+</body>
+</html>

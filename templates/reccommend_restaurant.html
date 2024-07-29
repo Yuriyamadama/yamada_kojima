@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block style %}
+<!--form-rateのclassのstyleを設定 ulはドット、liは横にinlineに-->
+.form-rate { text-align: center; }
+.form-rate ul { list-style-type: none; }
+.form-rate li { display: inline; }
+{% endblock %}
+{% block content %}
+
+<div class="display">
+    {{ user_name }}.These are my recommending restaurants.
+
+    {% for restaurant in restaurants %}
+    <p>
+    {{loop.index}}.{{restaurant}}
+    </p>
+    {% endfor %}
+
+
+    <div>
+        Hello {{ user_name }}. Could you evaluate the restaurant that you know?
+    </div>
+    <!--url_forで関数名を指定（）-->
+    <form action="{{url_for('evaluate_yes_or_no')}}" method="post">
+        <div class="form-rate">
+            {{form.value}}
+        </div>
+        {{form.user_name}}
+        <div>
+            <input type="submit" value="Submit">
+        </div>
+    </form>
+
+
+</div>
+
+{% endblock %}
