@@ -28,35 +28,33 @@ project_id = Column(ForeignKey("project.id"))
 ③User:ユーザに関するテーブルです。関心のあるトピックや、コミットしているプロジェクトなどに関する情報とユーザ名、ユーザidなどを管理するテーブルです。
 カラムはname,topic_id,project_id
 
-from sqlalchemy import Column, String, UniqueConstraint, Date, Integer, ForeignKey
+from sqlalchemy import Column, String, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 
 #ベースデータベースをインポート
 from app.models.db import BaseDatabase, database
 
+
 class Project(BaseDatabase):
     __tablename__ = "project"
     name = Column(String, unique=True, nullable=False)
-    to_be = Column(String, unique=True, nullable=False)
+    to_be = Column(String, nullable=False)
     type = Column(String, nullable=False)
     module_1 = Column(String, nullable=True)
     module_2 = Column(String, nullable=True)
     module_3 = Column(String, nullable=True)
     module_4 = Column(String, nullable=True)
     module_5 = Column(String, nullable=True)
-    user_id = Column(Integer, ForeignKey('user.id'))
+    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     user = relationship("User", back_populates="projects")
-    topic = relationship("Topic", back_populates="projects")
-
+    topics = relationship("Topic", back_populates="project")
 
     # initでクラスを初期化
-    def __init__(self, name, to_be, type, sprint_start_time=None, sprint_end_time=None, module_1=None, module_2=None,
+    def __init__(self, name, to_be, type, module_1=None, module_2=None,
                  module_3=None, module_4=None, module_5=None, user_id=None):
         self.name = name
         self.to_be = to_be
         self.type = type
-        self.sprint_start_time = sprint_start_time
-        self.sprint_end_time = sprint_end_time
         self.module_1 = module_1
         self.module_2 = module_2
         self.module_3 = module_3
@@ -64,30 +62,31 @@ class Project(BaseDatabase):
         self.module_5 = module_5
         self.user_id = user_id
 
-
     @staticmethod
-    def get_or_create(name, to_be, type, sprint_start_time=None, sprint_end_time=None, module_1=None, module_2=None,module_4=None,module_5=None,user_id=None)
+    def get_or_create(name, to_be, type, module_1=None, module_2=None,
+                      module_3=None, module_4=None, module_5=None, user_id=None):
         # make a session from base database
         session = database.connect_db()
-        #session からrowを持ってくる
-        #session.query(database name).filter(filter).first()←最初のやつ
-        row = session.query(Project).filter(User.name == name).first()
+        # session からrowを持ってくる
+        # session.query(database name).filter(filter).first()←最初のやつ
+        project = session.query(Project).filter_by(name=name).first()
 
-        #もし、一行でも存在するならrowを返して終わり
-        if row:
+        # もし、一行でも存在するならrowを返して終わり
+        if project:
             session.close()
-            return row
-        #なければ、projectを作成
-        project = Project(name=name)
+            return project
+　　　　　# なければ、projectを作成
+        project = Project(name=name, to_be=to_be, type=type, module_1=module_1,
+                          module_2=module_2, module_3=module_3, module_4=module_4,
+                          module_5=module_5, user_id=user_id)
         session.add(project)
         session.commit()
-
-        row = session.query(Project).filter(Project.name == name).first()
         session.close()
-        return row
+        return project
 
 
 
-    """Here we access the model for the first time. First, import the model in the controller,
-    check if the first line exists, commit the session if it doesn't, and create the database.
-    Put it as a static method in the model."""
+
+
+
+

@@ -7,15 +7,9 @@ import settings
 #上から理解する
 #理解するのに時間がかかることを恐れない。
 
-# to be hello.htmlで全てのデータを集約できるように。
-## 1.make model
-## 2.make rethome、いったんformはなしでOK
-## 3.make hello.html
-
-
 ##ロボターでappでテンプレートの場所を追加
 ##
-#さらにバックエンドのappにスタティックファイルの場所をせってい
+#さらにバックエンドのappにスタティックファイルの場所を設定
 app = Flask(__name__, template_folder='../../templates', static_folder='../../static')
 
 #作成したappを元にwebserverclassを作成。
@@ -47,6 +41,7 @@ def hello() -> str:
         return render_template("evaluate_restaurant.html", user_name=user_name, form=form)
 
     return render_template("hello.html", name=ROBOT_NANE)
+
 
 
 
